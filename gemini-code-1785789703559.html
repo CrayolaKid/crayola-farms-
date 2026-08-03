@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crayola Farms | Bulletin, Resell & Arcade</title>
+    <style>
+        :root {
+            --bg-dark: #e9ecef;
+            --container-bg: #ffffff;
+            --post-bg: #f8f9fa;
+            --sidebar-bg: #f1f3f5;
+            --border-color: #ced4da;
+            --accent-gold: #d48800;
+            --accent-red: #e63946;
+            --accent-green: #2b8a3e;
+            --accent-blue: #1864ab;
+            --text-main: #212529;
+            --text-muted: #495057;
+            --input-bg: #ffffff;
+            --kf-header-bg: #e2e8f0;
+        }
+
+        /* Dark Theme */
+        body.dark-mode {
+            --bg-dark: #121417;
+            --container-bg: #1a1d21;
+            --post-bg: #22262c;
+            --sidebar-bg: #181b1f;
+            --border-color: #343a40;
+            --accent-gold: #ffb703;
+            --accent-blue: #4dabf7;
+            --text-main: #f8f9fa;
+            --text-muted: #adb5bd;
+            --input-bg: #121417;
+            --kf-header-bg: #2b3036;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+        }
+
+        body {
+            background-image: url('autism-puzzle-piece-pp-scaled-1.jpg');
+            background-repeat: repeat;
+            background-size: 300px auto;
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--container-bg);
+            padding: 1.8rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-bottom: 4px solid var(--accent-gold);
+        }
+
+        .rainbow-text {
+            font-size: 3.2rem;
+            font-weight: bold;
+            background: linear-gradient(
+                90deg, 
+                #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff, #ff0000
+            );
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: rainbow-slide 4s linear infinite;
+            display: inline-block;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes rainbow-slide {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        header p {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        /* User Status Bar */
+        .user-bar {
+            background-color: var(--sidebar-bg);
+            color: var(--text-main);
+            padding: 0.6rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .badge {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        .role-owner { background-color: #d48800; }
+        .role-admin { background-color: var(--accent-red); }
+        .role-member { background-color: var(--accent-blue); }
+
+        .iq-badge {
+            background-color: #7209b7;
+            color: #ffffff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* Navigation Tabs */
+        .forum-container {
+            max-width: 1180px;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+
+        .tab-bar {
+            display: flex;
+            background-color: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.85rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-right: 1px solid var(--border-color);
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background-color: var(--post-bg);
+            color: var(--accent-gold);
+            border-bottom: 3px solid var(--accent-gold);
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 0 0 6px 6px;
+            padding: 1.5rem;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            margin-bottom: 2rem;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Search Bar */
+        .search-container {
+            background-color: var(--post-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 0.5rem 1rem;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        /* KIWI FARMS STYLE FORUM POSTS */
+        .forum-post {
+            background: var(--post-bg);
+            border: 2px solid var(--border-color);
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .post-author {
+            width: 220px;
+            background-color: var(--sidebar-bg);
+            padding: 1rem;
+            text-align: center;
+            border-right: 2px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .author-avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0.5rem auto;
+            border-radius: 4px;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            background-color: #adb5bd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #ffffff;
+        }
+
+        .author-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--accent-blue);
+            word-break: break-word;
+        }
+
+        .user-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 0.3rem;
+        }
+
+        .author-stats {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: left;
+            margin-top: 0.6rem;
+            line-height: 1.5;
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.5rem;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .post-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-header-bar {
+            background-color: var(--kf-header-bg);
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .post-permalink {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .post-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            padding: 0.8rem 1rem 0.2rem 1rem;
+        }
+
+        .post-content {
+            padding: 0.8rem 1rem 1rem 1rem;
+            flex-grow: 1;
+            font-size: 0.98rem;
+            color: var(--text-main);
+            white-space: pre-line;
+        }
+
+        .post-image-container {
+            padding: 0 1rem 1rem 1rem;
+        }
+
+        .post-image {
+            max-width: 100%;
+            max-height: 400px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .post-signature {
+            border-top: 1px dashed var(--border-color);
+            margin: 0 1rem;
+            padding: 0.5rem 0;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .post-footer-bar {
+            background-color: var(--sidebar-bg);
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .reactions-group {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .react-btn {
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.2rem 0.4rem;
+            font-size: 0.75rem;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .react-btn:hover {
+            background-color: var(--accent-gold);
+            color: #ffffff;
+        }
+
+        .forum-btn {
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.3rem 0.6rem;
+            font-size: 0.78rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            color: #ff6b6b;
+            border-color: var(--accent-red);
+        }
+
+        .delete-btn:hover {
+            background-color: var(--accent-red);
+            color: #ffffff;
+        }
+
+        /* MARKETPLACE SECTION */
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .market-card {
+            background-color: var(--post-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .market-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background-color: #dee2e6;
+        }
+
+        .market-details {
+            padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .market-title {
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            margin-bottom: 0.2rem;
+        }
+
+        .market-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--accent-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .market-desc {
+            font-size: 0.88rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .buy-btn {
+            background-color: var(--accent-green);
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* PROFILE DOSSIER TEMPLATES */
+        .dossier-card {
+            background: var(--post-bg);
+            border: 2px solid var(--accent-gold);
+            border-radius: 6px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .dossier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .dossier-grid {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 1rem;
+        }
+
+        .dossier-photo {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            background-color: #ced4da;
+        }
+
+        .dossier-info-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .dossier-info-table td {
+            padding: 0.4rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dossier-info-table td.label {
+            font-weight: bold;
+            color: var(--accent-gold);
+            width: 30%;
+        }
+
+        /* Payment Selector */
+        .payment-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .payment-option-btn {
+            background-color: var(--post-bg);
+            border: 2px solid var(--border-color);
+            padding: 0.6rem;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        .payment-option-btn.selected {
+            border-color: var(--accent-gold);
+            background-color: rgba(212, 136, 0, 0.1);
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            font-size: 0.88rem;
+            margin-bottom: 0.3rem;
+            color: var(--text-main);
+        }
+
+        .form-group input, 
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.6rem;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .approve-btn { background-color: var(--accent-green); }
+        .reject-btn { background-color: var(--accent-red); }
+
+        /* FLAPPY BIRD CANVAS */
+        #flappyCanvas {
+            background: #70c5ce;
+            display: block;
+            margin: 1rem auto;
+            border: 3px solid var(--border-color);
+            border-radius: 6px;
+            max-width: 100%;
+        }
+
+        /* Modals */
+        .verification-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-card {
+            background-color: var(--container-bg);
+            border: 3px solid var(--accent-gold);
+            padding: 1.8rem;
+            border-radius: 8px;
+            max-width: 580px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background-color: var(--container-bg);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 3px solid var(--accent-gold);
+        }
+
+        @media (max-width: 700px) {
+            .forum-post { flex-direction: column; }
+            .post-author { width: 100%; border-right: none; border-bottom: 2px solid var(--border-color); }
+            .dossier-grid { grid-template-columns: 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+            .payment-options { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Purchase & Integrated Payment Modal -->
+    <div id="buyModal" class="verification-modal" style="display: none;">
+        <div class="modal-card">
+            <h2 style="color: var(--accent-gold);">💳 Checkout & Payment</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                Select your preferred payment method below to complete purchase.
+            </p>
+            
+            <div id="buyItemDetails" style="background-color: var(--post-bg); padding: 0.8rem; border-radius: 4px; margin-bottom: 1rem; border: 1px solid var(--border-color);"></div>
+
+            <form id="buyForm">
+                <div class="form-group">
+                    <label>Select Payment Method:</label>
+                    <div class="payment-options">
+                        <div class="payment-option-btn selected" onclick="selectPaymentMethod('card', this)">💳 Credit / Debit Card</div>
+                        <div class="payment-option-btn" onclick="selectPaymentMethod('paypal', this)">🅿️ PayPal</div>
+                        <div class="payment-option-btn" onclick="selectPaymentMethod('cashapp', this)">💵 Cash App / Venmo</div>
+                        <div class="payment-option-btn" onclick="selectPaymentMethod('crypto', this)">₿ Crypto (BTC/ETH)</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="buyerName">Full Name:</label>
+                    <input type="text" id="buyerName" placeholder="John Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="buyerContact">Email Address (for Receipt):</label>
+                    <input type="email" id="buyerContact" placeholder="buyer@example.com" required>
+                </div>
+
+                <div id="paymentDetailsFields">
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number:</label>
+                        <input type="text" id="cardNumber" placeholder="4532 •••• •••• 8901" maxlength="19" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="shippingAddress">Shipping Address:</label>
+                    <textarea id="shippingAddress" placeholder="Street Address, City, State, Zip Code" required></textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 1rem;">
+                    <button type="submit" class="submit-btn approve-btn" style="flex: 1;">Complete Purchase</button>
+                    <button type="button" class="submit-btn reject-btn" onclick="closeBuyModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Top User Bar -->
+    <div class="user-bar">
+        <span>
+            Logged in as: <strong id="currentUsername">Guest</strong> 
+            (<span id="currentRoleBadge" class="badge role-owner">Owner</span>)
+            <span id="currentIQBadge" class="iq-badge">IQ: 131</span>
+        </span>
+        <span>
+            Posts: <strong id="currentPostCount">0</strong> | Joined: <strong id="currentJoinDate">Aug 2026</strong>
+        </span>
+    </div>
+
+    <header>
+        <h1 class="rainbow-text">Crayola Farms</h1>
+        <p>Bulletin, Resell Marketplace & Offline Gaming</p>
+    </header>
+
+    <div class="forum-container">
+
+        <!-- Navigation Tabs -->
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('forumTab', this)">💬 Forum Threads</button>
+            <button class="tab-btn" onclick="switchTab('iqTab', this)">🧠 Mensa IQ Test</button>
+            <button class="tab-btn" onclick="switchTab('settingsTab', this)">⚙️ Settings & Approvals</button>
+            <button class="tab-btn" onclick="switchTab('marketTab', this)">🛒 Resell Marketplace</button>
+            <button class="tab-btn" onclick="switchTab('templatesTab', this)">👤 Person Profiles</button>
+            <button class="tab-btn" onclick="switchTab('offlineMoneyTab', this)">🌾 Offline Money Farm</button>
+            <button class="tab-btn" onclick="switchTab('miscTab', this)">🎮 Miscellaneous</button>
+        </div>
+
+        <!-- TAB 1: FORUM THREADS -->
+        <div id="forumTab" class="tab-content active">
+            <div class="search-container">
+                <span style="font-size: 1.2rem;">🔍</span>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search threads by subject, title, content, or author..." oninput="filterPosts()">
+            </div>
+
+            <main id="forumFeed"></main>
+
+            <section style="background: var(--post-bg); padding: 1.25rem; border: 2px solid var(--border-color); border-radius: 4px; margin-top: 2rem;">
+                <h3 style="margin-bottom: 1rem; color: var(--accent-gold);">✍️ Post New Thread Entry</h3>
+                <form id="forumForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="subject">Person Featured / Subject Name</label>
+                            <input type="text" id="subject" placeholder="e.g. Jane Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="title">Thread Title</label>
+                            <input type="text" id="title" placeholder="e.g. Dossier & Discussion: Jane Doe" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Post Content</label>
+                        <textarea id="content" placeholder="Type entry content here..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageInput">Attach File / Image (Optional)</label>
+                        <input type="file" id="imageInput" accept="image/*">
+                    </div>
+                    <button type="submit" class="submit-btn">Publish Thread Post</button>
+                </form>
+            </section>
+        </div>
+
+        <!-- TAB 2: MENSA NORWAY IQ TEST -->
+        <div id="iqTab" class="tab-content">
+            <div style="text-align: center; background: var(--post-bg); border: 2px solid var(--accent-gold); padding: 1.5rem; border-radius: 6px;">
+                <h2>Official Mensa Norway IQ Assessment</h2>
+                <p style="margin: 1rem 0; color: var(--text-muted);">Take the test online to receive your verified IQ Role Badge across Crayola Farms.</p>
+                <a href="https://test.mensa.no/" target="_blank" class="submit-btn" style="text-decoration: none; display: inline-block;">🔗 Launch Mensa Norway Test Site</a>
+                
+                <hr style="border-color: var(--border-color); margin: 1.5rem 0;">
+                <form id="iqForm" style="max-width: 400px; margin: 0 auto;">
+                    <div class="form-group">
+                        <label for="iqScoreInput">Mensa Norway IQ Score:</label>
+                        <input type="number" id="iqScoreInput" min="60" max="160" placeholder="131" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Verify Score</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- TAB 3: SETTINGS -->
+        <div id="settingsTab" class="tab-content">
+            <h3 style="margin-bottom: 1.5rem; color: var(--accent-gold);">Profile Settings</h3>
+            <form id="settingsForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="setUsername">Username</label>
+                        <input type="text" id="setUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="setRole">User Role</label>
+                        <select id="setRole">
+                            <option value="owner">Owner</option>
+                            <option value="admin">Admin</option>
+                            <option value="member">Member</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="setUserTitle">Custom User Title</label>
+                    <input type="text" id="setUserTitle">
+                </div>
+                <div class="form-group">
+                    <label for="setTheme">Theme</label>
+                    <select id="setTheme">
+                        <option value="light">☀️ Light Mode</option>
+                        <option value="dark">🌙 Dark Mode</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Save Settings</button>
+            </form>
+        </div>
+
+        <!-- TAB 4: MARKETPLACE -->
+        <div id="marketTab" class="tab-content">
+            <h2 style="color: var(--accent-gold); margin-bottom: 1rem;">Crayola Farms Resell Marketplace</h2>
+            <div id="marketGrid" class="market-grid"></div>
+
+            <section style="background: var(--post-bg); padding: 1.25rem; border: 2px solid var(--border-color); border-radius: 6px;">
+                <h3 style="margin-bottom: 1rem; color: var(--accent-gold);">🏷️ List New Item for Resale</h3>
+                <form id="marketForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="itemTitle">Item Title</label>
+                            <input type="text" id="itemTitle" placeholder="e.g. Vintage Item" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemPrice">Resell Price ($ USD)</label>
+                            <input type="number" step="0.01" id="itemPrice" placeholder="25.00" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemDesc">Item Description</label>
+                        <textarea id="itemDesc" placeholder="Describe item condition..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn approve-btn">Publish Listing</button>
+                </form>
+            </section>
+        </div>
+
+        <!-- TAB 5: PERSON PROFILES / DOSSIER TEMPLATES (NEW SECTION 1) -->
+        <div id="templatesTab" class="tab-content">
+            <h2 style="color: var(--accent-gold); margin-bottom: 0.5rem;">👤 Person Dossiers & Profile Templates</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Post structured profiles on specific subjects using the standardized template below.</p>
+
+            <div id="dossierFeed"></div>
+
+            <section style="background: var(--post-bg); padding: 1.25rem; border: 2px solid var(--border-color); border-radius: 6px; margin-top: 2rem;">
+                <h3 style="margin-bottom: 1rem; color: var(--accent-gold);">📋 Create New Person Profile</h3>
+                <form id="dossierForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="personName">Full Name / Primary Subject:</label>
+                            <input type="text" id="personName" placeholder="e.g. Johnathan Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="personAlias">Known Aliases / Handles:</label>
+                            <input type="text" id="personAlias" placeholder="e.g. Johnny23, TheCollector">
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="personLocation">Known Location / Area:</label>
+                            <input type="text" id="personLocation" placeholder="e.g. Brooklyn, NY">
+                        </div>
+                        <div class="form-group">
+                            <label for="personStatus">Status / Priority Level:</label>
+                            <select id="personStatus">
+                                <option value="Low Priority">🟢 Low Priority</option>
+                                <option value="Moderate Monitoring">🟡 Moderate Monitoring</option>
+                                <option value="High Interest">🔴 High Interest</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="personNotes">Background Notes & Biography:</label>
+                        <textarea id="personNotes" placeholder="Enter detailed information, background notes, associated online handles..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="personPhoto">Upload Subject Photo (Optional):</label>
+                        <input type="file" id="personPhoto" accept="image/*">
+                    </div>
+                    <button type="submit" class="submit-btn">Publish Person Profile</button>
+                </form>
+            </section>
+        </div>
+
+        <!-- TAB 6: OFFLINE MONEY GENERATION / FARMING (NEW SECTION 2) -->
+        <div id="offlineMoneyTab" class="tab-content">
+            <h2 style="color: var(--accent-gold); margin-bottom: 0.5rem;">🌾 Offline Money Farming & Side-Hustles</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Strategies and tools for generating real-world, non-digital offline income.</p>
+
+            <div class="form-grid">
+                <!-- Farming Strategy 1 -->
+                <div style="background: var(--post-bg); padding: 1.2rem; border: 2px solid var(--accent-green); border-radius: 6px;">
+                    <h3 style="color: var(--accent-green); margin-bottom: 0.5rem;">🧺 1. Local Thrift & Flea Market Reselling</h3>
+                    <p style="font-size: 0.9rem;">Source low-cost goods offline from yard sales, estate clearouts, and local thrift stores to flip in person or at swap meets.</p>
+                    <ul style="margin: 0.8rem 0 0 1.2rem; font-size: 0.85rem;">
+                        <li><strong>Team Size:</strong> 2 - 3 people (Picker, Tester, Handler)</li>
+                        <li><strong>Est. Rate:</strong> $20 - $45 / hour per person</li>
+                    </ul>
+                </div>
+
+                <!-- Farming Strategy 2 -->
+                <div style="background: var(--post-bg); padding: 1.2rem; border: 2px solid var(--accent-gold); border-radius: 6px;">
+                    <h3 style="color: var(--accent-gold); margin-bottom: 0.5rem;">🌱 2. Micro-Farming & Produce Stall</h3>
+                    <p style="font-size: 0.9rem;">Grow high-yield microgreens, herbs, or flowers in a back garden or small plot and sell directly to local neighborhood markets.</p>
+                    <ul style="margin: 0.8rem 0 0 1.2rem; font-size: 0.85rem;">
+                        <li><strong>Startup Cost:</strong> $50 - $150</li>
+                        <li><strong>Harvest Turnaround:</strong> 10 - 21 days</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Interactive Offline Profit Calculator -->
+            <section style="background: var(--post-bg); padding: 1.25rem; border: 2px solid var(--border-color); border-radius: 6px; margin-top: 1.5rem;">
+                <h3 style="color: var(--accent-gold); margin-bottom: 1rem;">🧮 Offline Profit & Revenue Calculator</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="hourlyRateInput">Target Hourly Rate ($):</label>
+                        <input type="number" id="hourlyRateInput" value="25" oninput="calculateOfflineMoney()">
+                    </div>
+                    <div class="form-group">
+                        <label for="hoursWorkedInput">Hours Worked Per Week:</label>
+                        <input type="number" id="hoursWorkedInput" value="15" oninput="calculateOfflineMoney()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="teamSizeInput">Team Members Splitting Profit:</label>
+                    <input type="number" id="teamSizeInput" value="3" min="1" oninput="calculateOfflineMoney()">
+                </div>
+                <div id="calcResult" style="background: var(--container-bg); padding: 1rem; border-radius: 4px; border: 1px solid var(--border-color); font-weight: bold; font-size: 1.1rem; color: var(--accent-green); text-align: center;">
+                    Weekly Total: $375.00 | Per Person (3): $125.00 / week
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 7: MISCELLANEOUS & OFFLINE GAMES (NEW SECTION 3) -->
+        <div id="miscTab" class="tab-content">
+            <h2 style="color: var(--accent-gold); margin-bottom: 0.5rem;">🎮 Miscellaneous</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">Arcade & offline games section featuring <strong>Flappy Bird</strong>!</p>
+
+            <div style="text-align: center;">
+                <div style="margin-bottom: 0.5rem;">
+                    <strong>Controls:</strong> Press <strong>SPACEBAR</strong> or <strong>CLICK</strong> on canvas to Jump.
+                </div>
+                <canvas id="flappyCanvas" width="320" height="420"></canvas>
+                <button class="submit-btn approve-btn" onclick="resetFlappyGame()" style="margin-top: 0.5rem;">Restart Flappy Bird</button>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Crayola Farms Bulletin, Resell Marketplace & Arcade.</p>
+    </footer>
+
+    <script>
+        // State
+        let currentUser = JSON.parse(localStorage.getItem('crayola_user')) || {
+            username: 'Owner',
+            role: 'owner',
+            userTitle: 'Crayola Farms Founder',
+            avatar: '',
+            theme: 'light',
+            joinDate: 'Aug 2026',
+            iqScore: 131,
+            iqRole: 'High IQ / GigaBrain',
+            reactionScore: 142,
+            signature: 'Crayola Farms Administrator'
+        };
+
+        let activePaymentMethod = 'card';
+        let selectedMarketItem = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTheme(currentUser.theme || 'light');
+            updateUserBar();
+            loadPosts();
+            loadMarketItems();
+            loadDossiers();
+            initFlappyGame();
+        });
+
+        function applyTheme(theme) {
+            if (theme === 'dark') document.body.classList.add('dark-mode');
+            else document.body.classList.remove('dark-mode');
+        }
+
+        function switchTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+            if (btnElement) btnElement.classList.add('active');
+        }
+
+        function updateUserBar() {
+            document.getElementById('currentUsername').textContent = currentUser.username;
+            document.getElementById('currentJoinDate').textContent = currentUser.joinDate;
+            document.getElementById('currentPostCount').textContent = getPostsFromStorage().filter(p => p.author === currentUser.username).length;
+            
+            const roleBadge = document.getElementById('currentRoleBadge');
+            roleBadge.textContent = currentUser.role;
+            roleBadge.className = `badge role-${currentUser.role}`;
+
+            const iqBadge = document.getElementById('currentIQBadge');
+            iqBadge.textContent = currentUser.iqScore ? `IQ: ${currentUser.iqScore}` : 'IQ: Unverified';
+        }
+
+        /* DOSSIER / PERSON PROFILE SYSTEM */
+        function getDossiersFromStorage() {
+            const stored = localStorage.getItem('crayola_dossiers');
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function loadDossiers() {
+            const dossiers = getDossiersFromStorage();
+            const feed = document.getElementById('dossierFeed');
+            feed.innerHTML = '';
+
+            if (dossiers.length === 0) {
+                const defaultDossier = {
+                    id: 1,
+                    name: "Alex Rivera",
+                    alias: "ARivera_99",
+                    location: "New York, NY",
+                    status: "High Interest",
+                    notes: "Subject actively buys vintage items and participates in local flea markets. Regularly monitored.",
+                    photo: null,
+                    author: "Owner"
+                };
+                renderDossierCard(defaultDossier);
+            } else {
+                dossiers.forEach(d => renderDossierCard(d));
+            }
+        }
+
+        function renderDossierCard(d) {
+            const feed = document.getElementById('dossierFeed');
+            const card = document.createElement('div');
+            card.className = 'dossier-card';
+
+            const photoHTML = d.photo 
+                ? `<img src="${d.photo}" class="dossier-photo" alt="Subject Photo">`
+                : `<div class="dossier-photo" style="display:flex;align-items:center;justify-content:center;font-size:3rem;color:#fff;">👤</div>`;
+
+            card.innerHTML = `
+                <div class="dossier-header">
+                    <h3 style="color:var(--accent-gold);">${escapeHTML(d.name)}</h3>
+                    <span class="badge role-admin">${escapeHTML(d.status)}</span>
+                </div>
+                <div class="dossier-grid">
+                    <div>${photoHTML}</div>
+                    <div>
+                        <table class="dossier-info-table">
+                            <tr><td class="label">Primary Name:</td><td>${escapeHTML(d.name)}</td></tr>
+                            <tr><td class="label">Known Aliases:</td><td>${escapeHTML(d.alias || 'N/A')}</td></tr>
+                            <tr><td class="label">Location:</td><td>${escapeHTML(d.location || 'Unknown')}</td></tr>
+                            <tr><td class="label">Compiled By:</td><td>${escapeHTML(d.author)}</td></tr>
+                        </table>
+                        <div style="margin-top:0.8rem; font-size:0.9rem;">
+                            <strong>Background & Notes:</strong>
+                            <p style="white-space:pre-line; margin-top:0.2rem;">${escapeHTML(d.notes)}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            feed.appendChild(card);
+        }
+
+        document.getElementById('dossierForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const photoFile = document.getElementById('personPhoto').files[0];
+            let photoData = null;
+            if (photoFile) photoData = await convertImageToBase64(photoFile);
+
+            const dossier = {
+                id: Date.now(),
+                name: document.getElementById('personName').value,
+                alias: document.getElementById('personAlias').value,
+                location: document.getElementById('personLocation').value,
+                status: document.getElementById('personStatus').value,
+                notes: document.getElementById('personNotes').value,
+                photo: photoData,
+                author: currentUser.username
+            };
+
+            const dossiers = getDossiersFromStorage();
+            dossiers.push(dossier);
+            localStorage.setItem('crayola_dossiers', JSON.stringify(dossiers));
+            loadDossiers();
+            this.reset();
+            alert('Person Dossier Profile published successfully!');
+        });
+
+        /* OFFLINE MONEY CALCULATOR */
+        function calculateOfflineMoney() {
+            const rate = parseFloat(document.getElementById('hourlyRateInput').value) || 0;
+            const hours = parseFloat(document.getElementById('hoursWorkedInput').value) || 0;
+            const team = parseInt(document.getElementById('teamSizeInput').value) || 1;
+
+            const total = rate * hours;
+            const split = total / team;
+
+            document.getElementById('calcResult').textContent = 
+                `Weekly Total: $${total.toFixed(2)} | Per Person (${team}): $${split.toFixed(2)} / week`;
+        }
+
+        /* FLAPPY BIRD OFFLINE GAME */
+        let canvas, ctx, birdY, velocity, gravity, pipes, score, gameOver, animId;
+
+        function initFlappyGame() {
+            canvas = document.getElementById('flappyCanvas');
+            if (!canvas) return;
+            ctx = canvas.getContext('2d');
+
+            canvas.removeEventListener('click', flap);
+            canvas.addEventListener('click', flap);
+            window.removeEventListener('keydown', handleFlappyKey);
+            window.addEventListener('keydown', handleFlappyKey);
+
+            resetFlappyGame();
+        }
+
+        function handleFlappyKey(e) {
+            if (e.code === 'Space') {
+                const miscTab = document.getElementById('miscTab');
+                if (miscTab && miscTab.classList.contains('active')) {
+                    e.preventDefault();
+                    flap();
+                }
+            }
+        }
+
+        function resetFlappyGame() {
+            if (animId) cancelAnimationFrame(animId);
+            birdY = 200;
+            velocity = 0;
+            gravity = 0.35;
+            pipes = [];
+            score = 0;
+            gameOver = false;
+            loopFlappy();
+        }
+
+        function flap() {
+            if (gameOver) {
+                resetFlappyGame();
+            } else {
+                velocity = -6;
+            }
+        }
+
+        function loopFlappy() {
+            ctx.fillStyle = '#70c5ce';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            if (!gameOver) {
+                velocity += gravity;
+                birdY += velocity;
+
+                // Spawn Pipes
+                if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 140) {
+                    const topHeight = Math.floor(Math.random() * (canvas.height - 180)) + 30;
+                    pipes.push({ x: canvas.width, top: topHeight, gap: 100, passed: false });
+                }
+
+                // Move & Draw Pipes
+                for (let i = 0; i < pipes.length; i++) {
+                    let p = pipes[i];
+                    p.x -= 2;
+
+                    ctx.fillStyle = '#2b8a3e';
+                    ctx.fillRect(p.x, 0, 38, p.top);
+                    ctx.fillRect(p.x, p.top + p.gap, 38, canvas.height - (p.top + p.gap));
+
+                    // Collision Check
+                    if (
+                        40 + 20 > p.x && 40 < p.x + 38 &&
+                        (birdY < p.top || birdY + 20 > p.top + p.gap)
+                    ) {
+                        gameOver = true;
+                    }
+
+                    if (p.x + 38 < 40 && !p.passed) {
+                        p.passed = true;
+                        score++;
+                    }
+                }
+
+                // Remove offscreen pipes
+                if (pipes.length > 0 && pipes[0].x < -40) pipes.shift();
+
+                // Floor/Ceiling collision
+                if (birdY > canvas.height - 20 || birdY < 0) gameOver = true;
+            }
+
+            // Draw Bird
+            ctx.fillStyle = '#ffb703';
+            ctx.fillRect(40, birdY, 20, 20);
+
+            // Draw Score
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 20px sans-serif';
+            ctx.fillText(`Score: ${score}`, 15, 30);
+
+            if (gameOver) {
+                ctx.fillStyle = 'rgba(0,0,0,0.6)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 22px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('Game Over!', canvas.width / 2, canvas.height / 2 - 10);
+                ctx.font = '14px sans-serif';
+                ctx.fillText('Click or Press Space to Restart', canvas.width / 2, canvas.height / 2 + 20);
+                ctx.textAlign = 'start';
+            } else {
+                animId = requestAnimationFrame(loopFlappy);
+            }
+        }
+
+        /* UTILITY & STORAGE */
+        function convertImageToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function getPostsFromStorage() {
+            const stored = localStorage.getItem('crayola_forum_posts');
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function loadPosts() {
+            const posts = getPostsFromStorage();
+            const feed = document.getElementById('forumFeed');
+            feed.innerHTML = '';
+            posts.forEach((post, index) => renderPost(post, index + 1));
+        }
+
+        function renderPost(post, postNumber) {
+            const feed = document.getElementById('forumFeed');
+            const postArticle = document.createElement('article');
+            postArticle.className = 'forum-post';
+            postArticle.innerHTML = `
+                <div class="post-author">
+                    <div class="author-name">${escapeHTML(post.author || 'Anonymous')}</div>
+                    <div class="user-title">${escapeHTML(post.userTitle || 'Member')}</div>
+                    <div class="badge role-${post.role || 'member'}">${post.role || 'member'}</div>
+                </div>
+                <div class="post-main">
+                    <div class="post-header-bar"><span>Posted ${post.date}</span><a class="post-permalink">#${postNumber}</a></div>
+                    <div class="post-title">${escapeHTML(post.title)}</div>
+                    <div class="post-content">${escapeHTML(post.content)}</div>
+                </div>
+            `;
+            feed.appendChild(postArticle);
+        }
+
+        function loadMarketItems() {
+            const items = JSON.parse(localStorage.getItem('crayola_market_items')) || [
+                { id: 1, title: "Vintage Collectible Tin", price: "24.99", description: "Mint condition vintage item." }
+            ];
+            const grid = document.getElementById('marketGrid');
+            grid.innerHTML = items.map(i => `
+                <div class="market-card">
+                    <div class="market-details">
+                        <div class="market-title">${escapeHTML(i.title)}</div>
+                        <div class="market-price">$${parseFloat(i.price).toFixed(2)}</div>
+                        <div class="market-desc">${escapeHTML(i.description)}</div>
+                        <button class="buy-btn" onclick="openBuyModal(${i.id})">Buy Now</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openBuyModal(id) { document.getElementById('buyModal').style.display = 'flex'; }
+        function closeBuyModal() { document.getElementById('buyModal').style.display = 'none'; }
+
+        function selectPaymentMethod(m, el) {
+            document.querySelectorAll('.payment-option-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function escapeHTML(str) {
+            return str ? str.replace(/[&<>'"]/g, tag => ({'&': '&amp;','<': '&lt;','>': '&gt;',"'": '&#39;','"': '&quot;'}[tag] || tag)) : '';
+        }
+    </script>
+</body>
+</html>
