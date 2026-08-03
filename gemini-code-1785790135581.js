@@ -1,0 +1,137 @@
+// LocalStorage Helper
+function getDossiersFromStorage() {
+    try {
+        const stored = localStorage.getItem('crayola_dossiers');
+        return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+        console.error("Error reading dossiers from storage:", e);
+        return [];
+    }
+}
+
+// Compress uploaded photos so LocalStorage doesn't run out of memory
+function compressAndConvertImage(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 400; // Resize image down to fit easily in memory
+                const scaleFactor = MAX_WIDTH / img.width;
+                
+                if (scaleFactor < 1) {
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleFactor;
+                } else {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                }
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                // Compress JPEG quality to 70%
+                resolve(canvas.toDataURL('image/jpeg', 0.7));
+            };
+            img.onerror = (err) => reject(err);
+        };
+        reader.onerror = (err) => reject(err);
+    });
+}
+
+function loadDossiers() {
+    const dossiers = getDossiersFromStorage();
+    const feed = document.getElementById('dossierFeed');
+    if (!feed) return;
+    
+    feed.innerHTML = '';
+
+    if (dossiers.length === 0) {
+        const defaultDossier = {
+            id: 1,
+            name: "Alex Rivera",
+            alias: "ARivera_99",
+            location: "New York, NY",
+            status: "High Interest",
+            notes: "Subject actively buys vintage items and participates in local flea markets. Regularly monitored.",
+            photo: null,
+            author: "Owner"
+        };
+        renderDossierCard(defaultDossier);
+    } else {
+        dossiers.forEach(d => renderDossierCard(d));
+    }
+}
+
+function renderDossierCard(d) {
+    const feed = document.getElementById('dossierFeed');
+    const card = document.createElement('div');
+    card.className = 'dossier-card';
+
+    const photoHTML = d.photo 
+        ? `<img src="${d.photo}" class="dossier-photo" alt="Subject Photo">`
+        : `<div class="dossier-photo" style="display:flex;align-items:center;justify-content:center;font-size:3rem;color:#fff;">👤</div>`;
+
+    card.innerHTML = `
+        <div class="dossier-header">
+            <h3 style="color:var(--accent-gold);">${escapeHTML(d.name)}</h3>
+            <span class="badge role-admin">${escapeHTML(d.status)}</span>
+        </div>
+        <div class="dossier-grid">
+            <div>${photoHTML}</div>
+            <div>
+                <table class="dossier-info-table">
+                    <tr><td class="label">Primary Name:</td><td>${escapeHTML(d.name)}</td></tr>
+                    <tr><td class="label">Known Aliases:</td><td>${escapeHTML(d.alias || 'N/A')}</td></tr>
+                    <tr><td class="label">Location:</td><td>${escapeHTML(d.location || 'Unknown')}</td></tr>
+                    <tr><td class="label">Compiled By:</td><td>${escapeHTML(d.author)}</td></tr>
+                </table>
+                <div style="margin-top:0.8rem; font-size:0.9rem;">
+                    <strong>Background & Notes:</strong>
+                    <p style="white-space:pre-line; margin-top:0.2rem;">${escapeHTML(d.notes)}</p>
+                </div>
+            </div>
+        </div>
+    `;
+    feed.appendChild(card);
+}
+
+// Fixed Form Submission Listener with Safety Checks
+document.getElementById('dossierForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    try {
+        const photoInput = document.getElementById('personPhoto');
+        let photoData = null;
+
+        if (photoInput && photoInput.files && photoInput.files[0]) {
+            photoData = await compressAndConvertImage(photoInput.files[0]);
+        }
+
+        const dossier = {
+            id: Date.now(),
+            name: document.getElementById('personName').value,
+            alias: document.getElementById('personAlias').value,
+            location: document.getElementById('personLocation').value,
+            status: document.getElementById('personStatus').value,
+            notes: document.getElementById('personNotes').value,
+            photo: photoData,
+            author: currentUser ? currentUser.username : "Owner"
+        };
+
+        const dossiers = getDossiersFromStorage();
+        dossiers.push(dossier);
+        
+        // Save to LocalStorage with error catching
+        localStorage.setItem('crayola_dossiers', JSON.stringify(dossiers));
+        
+        loadDossiers();
+        this.reset();
+        alert('✅ Person Dossier Profile published successfully!');
+    } catch (err) {
+        console.error(err);
+        alert('⚠️ Unable to save profile. If you uploaded a photo, it may be too large for storage memory. Try publishing without a photo or with a smaller image.');
+    }
+});
